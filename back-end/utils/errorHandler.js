@@ -7,5 +7,10 @@ exports.handleError = (error) => {
             code: codes.CLIENT_ERROR_CODE_400, 
             message: "username or email already taken"
         }
+    } else {
+        return {
+            code: codes.SERVER_ERROR_CODE,
+            message: codes.SERVER_ERROR_MESSAGE
+        }
     }
 };
