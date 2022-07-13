@@ -16,6 +16,21 @@ exports.getUserID = async (username) => {
 };
 
 /**
+ * Returns the given user's password
+ * @param {int} id - The ID of the user
+ * @returns {String} - The hashed password in the database for the given user
+ */
+ exports.getPassword = async (id) => {
+	let query = "SELECT password FROM Users WHERE Users.id = ?;";
+	let [rows] = await db.query(query, [id]);
+    if (!rows[0]) {
+        throw new Error(`Server Error: no user has the id ${id}`);
+    } else {
+        return rows[0].password;
+    }
+}
+
+/**
  * Creates and saves a new user record
  * @param {String} username - The given username for the user
  * @param {String} email - The given email for the user
@@ -34,7 +49,6 @@ exports.createUser = async (username, email, password) => {
  */
 exports.sessionizeUser = async (id) => {
     let query = "SELECT Users.username, Users.email FROM Users WHERE Users.id = ?";
-    let params = [id];
-    let [rows] = await db.query(query, params);
+    let [rows] = await db.query(query, [id]);
     console.log(rows);
 };
