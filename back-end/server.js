@@ -5,6 +5,7 @@
 const express = require("express"); //npm install express
 var sessions = require('express-session'); //npm i express-session
 const multer = require("multer"); //npm install multer
+require('dotenv').config();
 
 const userRoutes = require("./routes/users");
 
