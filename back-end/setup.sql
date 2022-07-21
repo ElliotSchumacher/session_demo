@@ -53,3 +53,8 @@ INSERT INTO Books (ISBN, title) VALUES
     ('7777777777777', "title7"),
     ('0888888888888', "title8")
 ;
+
+INSERT INTO User_Books (id_user, ISBN_book) VALUES
+    (1, 1111111111),
+    (1, 0123456789),
+    (1, 2222222222)

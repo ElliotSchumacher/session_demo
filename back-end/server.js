@@ -11,6 +11,7 @@ require('dotenv').config();
 const { db } = require("./utils/db");
 
 const userRoutes = require("./routes/users");
+const bookRoutes = require("./routes/books");
 
 const app = express();
 
@@ -32,6 +33,7 @@ app.use(session({
 }));
 
 app.use("/user", userRoutes);
+app.use("/book", bookRoutes);
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT);
