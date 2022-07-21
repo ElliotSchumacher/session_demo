@@ -48,7 +48,7 @@ exports.createUser = async (username, email, password) => {
  * @returns {object} - The user's session data (id, username, email)
  */
 exports.sessionizeUser = async (id) => {
-    let query = "SELECT Users.username, Users.email FROM Users WHERE Users.id = ?";
+    let query = "SELECT u.id as id, u.username, u.email FROM Users as u WHERE u.id = ?";
     let [rows] = await db.query(query, [id]);
-    console.log(rows);
+    return rows[0];
 };

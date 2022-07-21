@@ -19,7 +19,8 @@ userRouter.post("/signup", async (req, res) => {
             const hashedPassword = hashSync(password, salt);
             await createUser(username, email, hashedPassword);
             const userID = await getUserID(username);
-            const sessionData = sessionizeUser(userID);
+            const sessionData = await sessionizeUser(userID);
+            req.session.user = sessionData;
             res.send("Signup Successful");
         }
     } catch(error) {
@@ -37,6 +38,8 @@ userRouter.post("/login", async (req, res) => {
         } else {
             const userID = await getUserID(username);
             if (userID !== -1 && compareSync(password, await getPassword(userID))) {
+                const sessionData = await sessionizeUser(userID);
+                req.session.user = sessionData;
                 res.status(codes.SUCCESS_CODE).send("Login Successful");
             } else {
                 res.status(codes.CLIENT_ERROR_CODE_401).send("Invalid user credentials");
@@ -49,8 +52,25 @@ userRouter.post("/login", async (req, res) => {
 
 });
 
-// userRouter.delete("/logout", (req, res) => {
-    
-// });
+userRouter.delete("/logout", (req, res) => {
+    try {
+        res.type("text");
+        const user = req.session.user;
+        if (!user) {
+            res.status(codes.CLIENT_ERROR_CODE_400).send("Not currently signed in");
+        } else {
+            req.session.destroy(error => {
+                if (error) {
+                    throw error;
+                }
+                res.clearCookie(process.env.SESS_NAME);
+                res.send("Successfully logged out");
+            });
+        }
+    } catch (error) {
+        const { code, message } = handleError(error);
+        res.status(code).send(message);
+    }
+});
 
 module.exports = userRouter;
